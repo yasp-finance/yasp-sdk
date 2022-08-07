@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "lib": [
+      "es2021",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "rootDirs": [
+      "src"
+    ],
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2021"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "files": [
+    "src/types/global.d.ts"
+  ]
+}
