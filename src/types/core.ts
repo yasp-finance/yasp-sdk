@@ -1,33 +1,54 @@
-import { FromSchema } from 'json-schema-to-ts'
-import { strategyVaultSpec } from '../schema/strategy-vault'
-import { protocolProviderSpec } from '../schema/protocol-provider'
+import { Program } from "@project-serum/anchor";
+import {PublicKey} from "@solana/web3.js";
 
-type StrategyVault = FromSchema<typeof strategyVaultSpec>
-type ProtocolProvider = FromSchema<typeof protocolProviderSpec>
+import { VaultProgram } from "../IDL/types/vault";
+
+export type AnchorVaultProgram = Program<VaultProgram>
+
+export type VaultFetch = AnchorVaultProgram['account']['vault']['fetch']
+export type VaultStrategyFetch = AnchorVaultProgram['account']['vaultStrategy']['fetch']
+export type VaultFeeDistributorFetch = AnchorVaultProgram['account']['vaultFeeDistributor']['fetch']
+
+export type Vault = AwaitedReturnType<VaultFetch>
+export type VaultStrategy = AwaitedReturnType<VaultStrategyFetch>
+export type VaultFeeDistributor = AwaitedReturnType<VaultFeeDistributorFetch>
+
+export type Rsu = Record<string, unknown>
+export type AwaitedReturnType<T extends (...args: any) => any> = Awaited<ReturnType<T>>
+
+
 type Instruction = Record<string, unknown>
 
-export interface ProtocolProviders {
-  forProtocolProviders(): Promise<ProtocolProvider[]>
+export interface IVaultAccounts {
+  vault(vaultMint: PublicKey): Promise<Vault>
+  vaultStrategy(vaultMint: PublicKey): Promise<VaultStrategy>
+  vaultFeeDistributor(vaultMint: PublicKey): Promise<VaultFeeDistributor>
+}
 
-  forProtocolProvider(pubkey: string): Promise<ProtocolProvider>
+/*
+export interface ProtocolProviders {
+  forProtocolProviders(): Promise<[]>
+
+  forProtocolProvider(pubkey: string): Promise<[]>
 }
 
 export interface StrategyVaults {
   forStrategyVaults(): Promise<void>
 
-  forStrategyVault(pubkey: string): Promise<StrategyVault>
+  forStrategyVault(pubkey: string): Promise<[]>
 
   deposit(
-    vault: StrategyVault,
+    vault: [],
     amount: string,
     ownerPubKey: string
   ): Promise<Instruction>
 
   withdraw(
-    vault: StrategyVault,
+    vault: [],
     amount: string,
     ownerPubKey: string
   ): Promise<Instruction>
 
-  crank(vault: StrategyVault): Promise<Instruction>
+  crank(vault: []): Promise<Instruction>
 }
+*/

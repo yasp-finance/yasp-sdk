@@ -29,9 +29,7 @@ export class StrategyVaultGettersImpl implements StrategyVaultGetters {
                 authority.toBuffer(),
             ],
             this.strategyVaultProgram.programId,
-        );
-
-        // const vault = await this.strategyVaultProgram.account.vault.
+        );.
     }
 
     async forVaultStrategy(vault: PublicKey): Promise<[PublicKey, number]> {
