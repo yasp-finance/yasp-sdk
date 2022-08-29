@@ -32,5 +32,3 @@ export const publicKey: FixedSizeBeet<PublicKey> = {
   byteSize: uint8Array32.byteSize,
   description: 'PublicKey',
 }
-
-export * from '@metaplex-foundation/beet'

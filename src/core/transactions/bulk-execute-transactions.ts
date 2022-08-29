@@ -1,4 +1,4 @@
-import { BulkExecuteBuildersFn } from '../../types/transaction-builders'
+import { BulkExecuteBuildersFn } from '@type/transaction-builders'
 
 export const bulkExecuteTransactions: BulkExecuteBuildersFn = async function (
   provider,

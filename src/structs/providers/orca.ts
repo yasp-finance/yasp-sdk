@@ -1,13 +1,7 @@
-import {
-  u256,
-  BeetStruct,
-  blob,
-  u64,
-  bool,
-  publicKey,
-  u8,
-} from '../../../utils/structs/beets'
-import { OrcaGlobalFarm, OrcaPool, OrcaUserFarm } from './types'
+import { BeetStruct, bool, u256, u64, u8 } from '@metaplex-foundation/beet'
+
+import { blob, publicKey } from '@util/structs/beets'
+import { OrcaGlobalFarm, OrcaPool, OrcaUserFarm } from '@type/providers/orca'
 
 export const OrcaGlobalFarmStruct = new BeetStruct<OrcaGlobalFarm>(
   [

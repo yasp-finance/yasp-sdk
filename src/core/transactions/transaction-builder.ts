@@ -11,11 +11,11 @@ import {
 import {
   TransactionBuilder,
   TransactionPayload,
-} from '../../types/transaction-builders'
-import { Instruction } from '../../types/instructions'
+} from '@type/transaction-builders'
+import { Instruction } from '@type/instructions'
 
-import { OwnerAccount } from '../../utils/accounts/owner'
-import { NoKeypairError } from '../errors/no-keypair'
+import { OwnerAccount } from '@yasp/accounts/owner-account'
+import { NoKeypairError } from '@yasp/errors/no-keypair'
 
 export class TransactionBuilderImpl implements TransactionBuilder {
   instructions: Instruction[]
