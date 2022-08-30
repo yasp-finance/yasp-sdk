@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js'
-import { TokenAccountStruct } from '../../structs/token-account'
+import { TokenAccountStruct } from '@structs/token-account'
 
 export async function forTokenAccount(
   this: Connection,

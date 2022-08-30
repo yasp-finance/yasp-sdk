@@ -10,7 +10,7 @@ import {
 } from '@solana/spl-token'
 
 import { forAssociatedToken } from './for-associated-token'
-import { SYSTEM_PROGRAM_ID } from '../../constants/solana'
+import { SYSTEM_PROGRAM_ID } from '@const/solana'
 
 export async function forCreateTokenAccountInstruction(
   this: Connection,

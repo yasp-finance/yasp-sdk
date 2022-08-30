@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from '@solana/web3.js'
-import { BeetStruct } from '../../utils/structs/beets'
-import { AccountWithPublicKey } from '../../types/core'
+import { BeetStruct } from '@metaplex-foundation/beet'
+import { AccountWithPublicKey } from '@type/core'
 
 export async function forParsedAccount<T>(
   this: Connection,

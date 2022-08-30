@@ -1,15 +1,6 @@
-import { Miner, Rewarder, Quarry, Minter, MintWrapper } from './types'
-import {
-  BeetStruct,
-  blob,
-  bool,
-  i64,
-  publicKey,
-  u128,
-  u16,
-  u64,
-  u8,
-} from '../../../utils/structs/beets'
+import { Miner, Rewarder, Quarry, Minter, MintWrapper } from '@type/providers/quarry'
+import { blob, publicKey } from '@util/structs/beets'
+import { BeetStruct, bool, u128, u16, u64, u8 } from '@metaplex-foundation/beet'
 
 export const MinerStruct = new BeetStruct<Miner>(
   [

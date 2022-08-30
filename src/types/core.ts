@@ -7,6 +7,7 @@ import { VaultProgram } from '../IDL/types/vault'
 export type AccountWithPublicKey<T = AccountInfo<Buffer>> = {
   publicKey: PublicKey
 } & T
+export type AccountMap<T = unknown> = Map<PublicKey, AccountWithPublicKey<T>>
 export type AnchorVaultProgram = Program<VaultProgram>
 
 export type VaultFetch = AnchorVaultProgram['account']['vault']['fetch']

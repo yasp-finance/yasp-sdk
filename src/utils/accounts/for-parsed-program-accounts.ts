@@ -4,8 +4,8 @@ import {
   GetProgramAccountsFilter,
   PublicKey,
 } from '@solana/web3.js'
-import { BeetStruct, FixableBeetStruct } from '../../utils/structs/beets'
-import { AccountWithPublicKey } from '../../types/core'
+import { BeetStruct, FixableBeetStruct } from '@metaplex-foundation/beet'
+import { AccountWithPublicKey } from '@type/core'
 import { forProgramAccounts } from './for-program-accounts'
 
 export async function forParsedProgramAccounts<T>(

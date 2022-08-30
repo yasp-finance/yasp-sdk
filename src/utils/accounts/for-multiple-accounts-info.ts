@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js'
-import { AccountWithPublicKey } from '../../types/core'
+import { AccountWithPublicKey } from '@type/core'
 
 export async function forMultipleAccountsInfo(
   this: Connection,

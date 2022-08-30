@@ -1,8 +1,8 @@
 import { Connection, PublicKey } from '@solana/web3.js'
 import { forMultipleAccountsInfo } from './for-multiple-accounts-info'
 
-import { MAX_ACCOUNT_BATCH_SIZE } from '../../constants/solana'
-import { AccountWithPublicKey } from '../../types/core'
+import { MAX_ACCOUNT_BATCH_SIZE } from '@const/solana'
+import { AccountWithPublicKey } from '@type/core'
 
 export async function forMultipleAccountsInfoSafe(
   this: Connection,
