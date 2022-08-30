@@ -32,6 +32,20 @@ export type ProviderContext<P = unknown, F = unknown> =
   | ProviderPoolContext<P>
   | ProviderFarmContext<F>
 
+export interface ProviderResolvers<P, F, U> {
+  resolvePools(
+    addresses: PublicKey[]
+  ): Promise<Map<PublicKey, AccountWithPublicKey<P>>>
+
+  resolveFarms(
+    addresses: PublicKey[]
+  ): Promise<Map<PublicKey, AccountWithPublicKey<F>>>
+
+  resolveUserFarms(
+    addresses: PublicKey[]
+  ): Promise<Map<PublicKey, AccountWithPublicKey<U>>>
+}
+
 export interface ProviderContextAdapter<P = unknown, F = unknown> {
   toProviderPoolContext(
     vault: Vault,
@@ -67,21 +81,9 @@ export interface Provider<P, F, U> {
 
   providerSlug: string
 
-  solanaConnection: Connection
-
   contextAdapter: ProviderContextAdapter<P, F>
 
   instructions: ProviderInstructions<ProviderContext<P, F>>
 
-  resolvePools(
-    addresses: PublicKey[]
-  ): Promise<Map<PublicKey, AccountWithPublicKey<P>>>
-
-  resolveFarms(
-    addresses: PublicKey[]
-  ): Promise<Map<PublicKey, AccountWithPublicKey<F>>>
-
-  resolveUserFarms(
-    addresses: PublicKey[]
-  ): Promise<Map<PublicKey, AccountWithPublicKey<U>>>
+  resolvers: ProviderResolvers<P, F, U>
 }
