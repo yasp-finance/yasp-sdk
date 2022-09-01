@@ -13,7 +13,7 @@ import { forMiner } from '@yasp/providers/quarry/utils/for-miner'
 import { forParsedAccount } from '@util/accounts/for-parsed-account'
 import { RewarderStruct } from '@structs/providers'
 
-export type OrcaContextAdapterDeps = {
+export type QuarryContextAdapterDeps = {
   solanaConnection: Connection
 }
 
@@ -22,22 +22,22 @@ export class QuarryContextAdapter
 {
   private readonly connection: Connection
 
-  constructor(deps: OrcaContextAdapterDeps) {
+  constructor(deps: QuarryContextAdapterDeps) {
     this.connection = deps.solanaConnection
   }
 
   async toProviderPoolContext(
-    vault: Vault,
+    vault: AccountWithPublicKey<Vault>,
     pool: AccountWithPublicKey<unknown>
   ): Promise<ProviderPoolContext<unknown>> {
     throw new NoPoolsError()
   }
 
   async toProviderFarmContext(
-    vault: Vault,
+    vault: AccountWithPublicKey<Vault>,
     farm: AccountWithPublicKey<Quarry>
   ): Promise<ProviderFarmContext<Quarry>> {
-    const [executor] = await forExecutor(vault.vault)
+    const [executor] = await forExecutor(vault.publicKey)
 
     const [vaultBaseTokenAccount] = await forAssociatedToken(
       farm.tokenMintKey,

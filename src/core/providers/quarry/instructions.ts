@@ -1,5 +1,6 @@
 import {
   Connection,
+  Signer,
   SYSVAR_CLOCK_PUBKEY,
   TransactionInstruction,
 } from '@solana/web3.js'
@@ -16,6 +17,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { QUARRY_MINE, QUARRY_MINT_WRAPPER } from '@const/providers/quarry'
 import { forParsedAccount } from '@util/accounts/for-parsed-account'
 import { RewarderStruct } from '@structs/providers'
+import BN from 'bn.js'
 
 export type QuarryInstructionsDeps = {
   solanaConnection: Connection
@@ -32,14 +34,15 @@ export class QuarryInstructions implements ProviderInstructions {
   }
 
   async init(
+    signer: Signer,
     context: ProviderFarmContextWithVault<Quarry>
   ): Promise<TransactionInstruction[]> {
     return [
       await this.program.methods
         .quarryInitFarm()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           quarry: context.farm.publicKey,
@@ -52,11 +55,14 @@ export class QuarryInstructions implements ProviderInstructions {
           farmProgramId: QUARRY_MINE,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async harvest(
+    signer: Signer,
+
     context: ProviderFarmContextWithVault<Quarry>
   ): Promise<TransactionInstruction[]> {
     const rewarder = await forParsedAccount<Rewarder>.call(
@@ -71,8 +77,8 @@ export class QuarryInstructions implements ProviderInstructions {
       await this.program.methods
         .quarryHarvest()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           quarry: context.farm.publicKey,
@@ -89,19 +95,22 @@ export class QuarryInstructions implements ProviderInstructions {
           tokenProgram: TOKEN_PROGRAM_ID,
           clock: SYSVAR_CLOCK_PUBKEY,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async redeemToStake(
+    signer: Signer,
+
     context: ProviderFarmContextWithVault<Quarry>
   ): Promise<TransactionInstruction[]> {
     return [
       await this.program.methods
         .quarryRedeemToStake()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           quarry: context.farm.publicKey,
@@ -113,16 +122,23 @@ export class QuarryInstructions implements ProviderInstructions {
           tokenProgram: TOKEN_PROGRAM_ID,
           clock: SYSVAR_CLOCK_PUBKEY,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async reinvest(
+    signer: Signer,
+
     context: ProviderFarmContextWithVault<Quarry>
   ): Promise<TransactionInstruction[]> {
     // TODO: add vault reward distribution logic
     return [
-      await this.program.methods.quarryReinvest([]).accounts({}).instruction(),
+      await this.program.methods
+        .quarryReinvest([])
+        .accounts({})
+        .signers([signer])
+        .instruction(),
     ]
   }
 
@@ -135,6 +151,24 @@ export class QuarryInstructions implements ProviderInstructions {
   }
 
   redeemToToken(): Promise<TransactionInstruction[]> {
+    throw new NoPoolsError()
+  }
+
+  stake(
+    amount: BN,
+    signer: Signer,
+    context: ProviderFarmContextWithVault<Quarry>
+  ): Promise<TransactionInstruction[]> {
+    /// TODO:`
+    throw new NoPoolsError()
+  }
+
+  unStake(
+    amount: BN,
+    signer: Signer,
+    context: ProviderFarmContextWithVault<Quarry>
+  ): Promise<TransactionInstruction[]> {
+    /// TODO:`
     throw new NoPoolsError()
   }
 }

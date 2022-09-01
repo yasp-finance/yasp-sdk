@@ -25,10 +25,10 @@ export class OrcaContextAdapter
   }
 
   async toProviderPoolContext(
-    vault: Vault,
+    vault: AccountWithPublicKey<Vault>,
     pool: AccountWithPublicKey<OrcaPool>
   ): Promise<ProviderPoolContext<OrcaPool>> {
-    const [executor] = await forExecutor(vault.vault)
+    const [executor] = await forExecutor(vault.publicKey)
 
     const [vaultTokenAAccount] = await forAssociatedToken(
       pool.tokenAMint,
@@ -54,10 +54,10 @@ export class OrcaContextAdapter
   }
 
   async toProviderFarmContext(
-    vault: Vault,
+    vault: AccountWithPublicKey<Vault>,
     farm: AccountWithPublicKey<OrcaGlobalFarm>
   ): Promise<ProviderFarmContext<OrcaGlobalFarm>> {
-    const [executor] = await forExecutor(vault.vault)
+    const [executor] = await forExecutor(vault.publicKey)
 
     const [vaultBaseTokenAccount] = await forAssociatedToken(
       farm.baseTokenMint,

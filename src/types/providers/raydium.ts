@@ -191,5 +191,7 @@ export type SerumMarket = {
 }
 
 export type RaydiumPool = RaydiumPoolV5 | RaydiumPoolV4
-export type RaydiumUserFarm = RaydiumUserFarmV3 | RaydiumUserFarmV5
+export type RaydiumUserFarmv5RaydiumUserFarm =
+  | RaydiumUserFarmV3
+  | RaydiumUserFarmV5
 export type RaydiumGlobalFarm = RaydiumGlobalFarmV3 | RaydiumGlobalFarmV5

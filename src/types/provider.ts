@@ -1,8 +1,14 @@
-import { Connection, PublicKey, TransactionInstruction } from '@solana/web3.js'
+import {
+  Connection,
+  PublicKey,
+  Signer,
+  TransactionInstruction,
+} from '@solana/web3.js'
 import { AccountWithPublicKey, Vault } from '@type/core'
+import BN from 'bn.js'
 
 export type VaultContext = {
-  vault: Vault
+  vault: AccountWithPublicKey<Vault>
   shares: PublicKey
   executor: PublicKey
   strategy: PublicKey
@@ -38,7 +44,7 @@ export interface ProviderResolvers<P, F, U> {
   ): Promise<Map<PublicKey, AccountWithPublicKey<P>>>
 
   resolveFarms(
-    addresses: PublicKey[]
+      addresses: PublicKey[]
   ): Promise<Map<PublicKey, AccountWithPublicKey<F>>>
 
   resolveUserFarms(
@@ -59,21 +65,29 @@ export interface ProviderContextAdapter<P = unknown, F = unknown> {
 }
 
 export interface ProviderInstructions<C = ProviderContext> {
-  // unStake(context: C): Promise<TransactionInstruction[]>
+  unStake(
+    amount: BN,
+    signer: Signer,
+    context: C
+  ): Promise<TransactionInstruction[]>
 
-  // stake(context: C): Promise<TransactionInstruction[]>
+  stake(
+    amount: BN,
+    signer: Signer,
+    context: C
+  ): Promise<TransactionInstruction[]>
 
-  harvest(context: C): Promise<TransactionInstruction[]>
+  harvest(signer: Signer, context: C): Promise<TransactionInstruction[]>
 
-  reinvest(context: C): Promise<TransactionInstruction[]>
+  reinvest(signer: Signer, context: C): Promise<TransactionInstruction[]>
 
-  redeemToStake(context: C): Promise<TransactionInstruction[]>
+  redeemToStake(signer: Signer, context: C): Promise<TransactionInstruction[]>
 
-  redeemToLP(context: C): Promise<TransactionInstruction[]>
+  redeemToLP(signer: Signer, context: C): Promise<TransactionInstruction[]>
 
-  redeemToToken(context: C): Promise<TransactionInstruction[]>
+  redeemToToken(signer: Signer, context: C): Promise<TransactionInstruction[]>
 
-  init(context: C): Promise<TransactionInstruction[]>
+  init(signer: Signer, context: C): Promise<TransactionInstruction[]>
 }
 
 export interface Provider<P, F, U> {

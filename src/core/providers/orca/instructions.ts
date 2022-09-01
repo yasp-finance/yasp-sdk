@@ -1,5 +1,6 @@
 import {
   Connection,
+  Signer,
   SYSVAR_CLOCK_PUBKEY,
   TransactionInstruction,
 } from '@solana/web3.js'
@@ -17,6 +18,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { OrcaGlobalFarm, OrcaPool } from '@type/providers'
 import { forPoolAuthority } from '@yasp/providers/orca/utils/for-pool-authority'
 import { forFarmAuthority } from '@yasp/providers/orca/utils/for-farm-authority'
+import BN from 'bn.js'
 
 export type OrcaInstructionsDeps = {
   solanaConnection: Connection
@@ -33,14 +35,15 @@ export class OrcaInstructions implements ProviderInstructions {
   }
 
   async init(
+    signer: Signer,
     context: ProviderFarmContextWithVault<OrcaGlobalFarm>
   ): Promise<TransactionInstruction[]> {
     return [
       await this.program.methods
         .orcaInitFarm()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           farmId: context.farm.publicKey,
@@ -49,23 +52,25 @@ export class OrcaInstructions implements ProviderInstructions {
           farmProgramId: ORCA_FARM_ID,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async harvest(
+    signer: Signer,
     context: ProviderFarmContextWithVault<OrcaGlobalFarm>
   ): Promise<TransactionInstruction[]> {
     return [
       await this.program.methods
         .orcaHarvest()
         .accounts({
-          vault: context.vault.vault,
+          vault: context.vault.publicKey,
           farmBaseVault: context.farm.baseTokenVault,
           farmRewardVault: context.farm.rewardTokenVault,
           farmAuthority: context.farm.emissionsAuthority,
           vaultRewardTokenAccount: context.vaultRewardTokenAccounts[0],
-          authority: context.vault.authority,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           farmId: context.farm.publicKey,
@@ -74,11 +79,13 @@ export class OrcaInstructions implements ProviderInstructions {
           tokenProgram: TOKEN_PROGRAM_ID,
           clock: SYSVAR_CLOCK_PUBKEY,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async redeemToLP(
+    signer: Signer,
     context: ProviderPoolContextWithVault<OrcaPool>
   ): Promise<TransactionInstruction[]> {
     const [ammAuthority] = await forPoolAuthority(context.pool.publicKey)
@@ -86,8 +93,8 @@ export class OrcaInstructions implements ProviderInstructions {
       await this.program.methods
         .orcaRedeemToLp()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           lpTokenMint: context.pool.poolMint,
@@ -102,11 +109,13 @@ export class OrcaInstructions implements ProviderInstructions {
           poolProgramId: ORCA_POOL_ID,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async redeemToStake(
+    signer: Signer,
     context: ProviderFarmContextWithVault<OrcaGlobalFarm>
   ): Promise<TransactionInstruction[]> {
     const [farmAuthority] = await forFarmAuthority(context.farm.publicKey)
@@ -114,8 +123,8 @@ export class OrcaInstructions implements ProviderInstructions {
       await this.program.methods
         .orcaRedeemToStake()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           farmId: context.farm.publicKey,
@@ -131,11 +140,13 @@ export class OrcaInstructions implements ProviderInstructions {
           farmProgramId: ORCA_FARM_ID,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async redeemToToken(
+    signer: Signer,
     context: ProviderPoolContextWithVault<OrcaPool>
   ): Promise<TransactionInstruction[]> {
     const [ammAuthority] = await forPoolAuthority(context.pool.publicKey)
@@ -143,8 +154,8 @@ export class OrcaInstructions implements ProviderInstructions {
       await this.program.methods
         .orcaRedeemToToken()
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           lpTokenMint: context.pool.poolMint,
@@ -159,22 +170,24 @@ export class OrcaInstructions implements ProviderInstructions {
           poolProgramId: ORCA_POOL_ID,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
   async reinvest(
+    signer: Signer,
     context: ProviderFarmContextWithVault<OrcaGlobalFarm>
   ): Promise<TransactionInstruction[]> {
-      // TODO: add vault reward distribution logic
+    // TODO: add vault reward distribution logic
     const [farmAuthority] = await forFarmAuthority(context.farm.publicKey)
 
     return [
       await this.program.methods
         .orcaReinvest([])
         .accounts({
-          vault: context.vault.vault,
-          authority: context.vault.authority,
+          vault: context.vault.publicKey,
+          authority: signer.publicKey,
           strategy: context.strategy,
           executor: context.executor,
           farmId: context.farm.publicKey,
@@ -190,19 +203,28 @@ export class OrcaInstructions implements ProviderInstructions {
           farmProgramId: ORCA_FARM_ID,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
+        .signers([signer])
         .instruction(),
     ]
   }
 
-  // stake(
-  //     context: ProviderContext<OrcaPool, OrcaGlobalFarm>
-  // ): Promise<TransactionInstruction[]> {
-  //   return [await this.program.methods.orcaStake().accounts({}).instruction()]
-  // }
-  //
-  // unStake(
-  //     context: ProviderContext<OrcaPool, OrcaGlobalFarm>
-  // ): Promise<TransactionInstruction[]> {
-  //   return [await this.program.methods.orcaUnstake().accounts({}).instruction()]
-  // }
+  async stake(
+    amount: BN,
+    signer: Signer,
+    context: ProviderFarmContextWithVault<OrcaGlobalFarm>
+  ): Promise<TransactionInstruction[]> {
+    return [
+      await this.program.methods.orcaStake(amount).accounts({}).instruction(),
+    ]
+  }
+
+  async unStake(
+    amount: BN,
+    signer: Signer,
+    context: ProviderFarmContextWithVault<OrcaGlobalFarm>
+  ): Promise<TransactionInstruction[]> {
+    return [
+      await this.program.methods.orcaUnstake(amount).accounts({}).instruction(),
+    ]
+  }
 }
